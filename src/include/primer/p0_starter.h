@@ -94,10 +94,10 @@ class RowMatrixOperations {
   static std::unique_ptr<RowMatrix<T>> AddMatrices(std::unique_ptr<RowMatrix<T>> mat1,
                                                    std::unique_ptr<RowMatrix<T>> mat2) {
     // TODO(P0): Add code
-    if(GetRows(mat1) == GetRows(mat2) && GetCols(mat1) == GetCols(mat2)){
-      int rows(GetRows(mat1));
-      int cols(GetCols(mat1));
-      std::unique_ptr<RowMatrix<T>> mat = new RowMatrix<T>(rows, cols);
+    if((*mat1).GetRows() == (*mat2).GetRows() && (*mat1).GetColumns() == (*mat1).GetColumns()){
+      int rows((*mat1).GetRows());
+      int cols((*mat1).GetColumns());
+      std::unique_ptr<RowMatrix<T>> mat(new RowMatrix<T>(rows, cols));
       for(int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
           (*mat).SetElem(i, j, (*mat1).GetElem(i, j) + (*mat2).GetElem(i, j));
@@ -114,11 +114,11 @@ class RowMatrixOperations {
   static std::unique_ptr<RowMatrix<T>> MultiplyMatrices(std::unique_ptr<RowMatrix<T>> mat1,
                                                         std::unique_ptr<RowMatrix<T>> mat2) {
     // TODO(P0): Add code
-    if(GetRows(mat2) == GetCols(mat1)){
-      int rows(GetRows(mat1));
-      int tmp(GetRows(mat2));
-      int cols(GetCols(mat2));
-      std::unique_ptr<RowMatrix<T>> mat = new RowMatrix<T>;
+    if((*mat2).GetRows() == (*mat1).GetColumns()){
+      int rows((*mat1).GetRows());
+      int tmp((*mat2).GetRows());
+      int cols((*mat2).GetColumns());
+      std::unique_ptr<RowMatrix<T>> mat(new RowMatrix<T>(rows, cols));
       for(int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
           (*mat).SetElem(i, j, 0);
