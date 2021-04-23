@@ -23,7 +23,7 @@ template <typename T>
 class Matrix {
  protected:
   // TODO(P0): Add implementation
-  Matrix(int r, int c):rows(r), cols(c) { linear = new T[rows * cols]; }
+  Matrix(int r, int c) : rows(r), cols(c) { linear = new T[rows * cols]; }
 
   // # of rows in the matrix
   int rows;
@@ -51,14 +51,19 @@ class Matrix {
   virtual void MatImport(T *arr) = 0;
 
   // TODO(P0): Add implementation
-  virtual ~Matrix() { delete [] linear; };
+  virtual ~Matrix() { delete[] linear; }
 };
 
 template <typename T>
 class RowMatrix : public Matrix<T> {
  public:
   // TODO(P0): Add implementation
-  RowMatrix(int r, int c) : Matrix<T>(r, c) { this->data_ = new int*[this->rows]; for(int i; i < r; i++) { this->data_[i] = this->linear + i * this->cols; } }
+  RowMatrix(int r, int c) : Matrix<T>(r, c) {
+    this->data_ = new int *[this->rows];
+    for (int i = 0; i < r; i++) {
+      this->data_[i] = this->linear + i * this->cols;
+    }
+  }
 
   // TODO(P0): Add implementation
   int GetRows() override { return this->rows; }
@@ -73,10 +78,15 @@ class RowMatrix : public Matrix<T> {
   void SetElem(int i, int j, T val) override { this->data_[i][j] = val; }
 
   // TODO(P0): Add implementation
-  void MatImport(T *arr) override { int max = this->rows * this->cols; for(int i; i < max; i++) { this->linear[i] = arr[i]; } }
+  void MatImport(T *arr) override {
+    int max = this->rows * this->cols;
+    for (int i = 0; i < max; i++) {
+      this->linear[i] = arr[i];
+    }
+  }
 
   // TODO(P0): Add implementation
-  ~RowMatrix() override { delete [] data_; };
+  ~RowMatrix() override { delete[] data_; };
 
  private:
   // 2D array containing the elements of the matrix in row-major format
@@ -94,11 +104,11 @@ class RowMatrixOperations {
   static std::unique_ptr<RowMatrix<T>> AddMatrices(std::unique_ptr<RowMatrix<T>> mat1,
                                                    std::unique_ptr<RowMatrix<T>> mat2) {
     // TODO(P0): Add code
-    if((*mat1).GetRows() == (*mat2).GetRows() && (*mat1).GetColumns() == (*mat1).GetColumns()){
+    if ((*mat1).GetRows() == (*mat2).GetRows() && (*mat1).GetColumns() == (*mat1).GetColumns()) {
       int rows((*mat1).GetRows());
       int cols((*mat1).GetColumns());
       std::unique_ptr<RowMatrix<T>> mat(new RowMatrix<T>(rows, cols));
-      for(int i = 0; i < rows; i++) {
+      for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
           (*mat).SetElem(i, j, (*mat1).GetElem(i, j) + (*mat2).GetElem(i, j));
         }
@@ -114,12 +124,12 @@ class RowMatrixOperations {
   static std::unique_ptr<RowMatrix<T>> MultiplyMatrices(std::unique_ptr<RowMatrix<T>> mat1,
                                                         std::unique_ptr<RowMatrix<T>> mat2) {
     // TODO(P0): Add code
-    if((*mat2).GetRows() == (*mat1).GetColumns()){
+    if ((*mat2).GetRows() == (*mat1).GetColumns()) {
       int rows((*mat1).GetRows());
       int tmp((*mat2).GetRows());
       int cols((*mat2).GetColumns());
       std::unique_ptr<RowMatrix<T>> mat(new RowMatrix<T>(rows, cols));
-      for(int i = 0; i < rows; i++) {
+      for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
           (*mat).SetElem(i, j, 0);
           for (int k = 0; k < tmp; k++) {
@@ -139,9 +149,9 @@ class RowMatrixOperations {
                                                     std::unique_ptr<RowMatrix<T>> matB,
                                                     std::unique_ptr<RowMatrix<T>> matC) {
     // TODO(P0): Add code
-    std::unique_ptr<RowMatrix<T>> mul = MultiplyMatrices(matA, matB);
-    if(!mul){
-      std::unique_ptr<RowMatrix<T>> res = AddMatrices(mul, matC);
+    std::unique_ptr<RowMatrix<T>> mul(MultiplyMatrices(matA, matB));
+    if (!mul) {
+      std::unique_ptr<RowMatrix<T>> res(AddMatrices(mul, matC));
       return res;
     }
     return std::unique_ptr<RowMatrix<T>>(nullptr);
